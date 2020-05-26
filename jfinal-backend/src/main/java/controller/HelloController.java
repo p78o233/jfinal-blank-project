@@ -6,15 +6,20 @@ import callback.R;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
-import com.jfinal.core.paragetter.Para;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.json.FastJson;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
 import domain.dto.TestDto;
+import domain.po.Test;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HelloController extends Controller{
@@ -80,5 +85,48 @@ public class HelloController extends Controller{
     @Before(POST.class)
     public void postRequestMethod(){
         renderJson(new R(true,200,"只能通过post方式请求",""));
+    }
+
+//    数据库操作
+//    查询
+    public void queryParam(){
+        List<Record> tests = new ArrayList<Record>();
+        tests = Db.find("select * from test");
+        renderJson(new R(true,200,tests,""));
+    }
+//    分页查询
+    public void queryPage(){
+//        第一个参数当前页码 第二个参数分页大小
+        Page<Test> testPage = Test.dao.paginate(1,1,"select * "," from test");
+        renderJson(new R(true,200,testPage,""));
+    }
+//    新增
+    public void insertTest(){
+        String json = getRawData();
+        Test test = JSONObject.parseObject(json,Test.class);
+//        一定要有getset方法的做法
+        Test dto = new Test();
+        boolean result = dto.set("name",test.getName()).set("cdNum",test.getCdNum())
+                .set("createTime",test.getCreateTime()).set("score",test.getScore()).save();
+//        System.out.println("主键"+dto.getInt("id"));
+        renderJson(new R(true,200,result,""));
+    }
+//    修改
+    public void updateTest(){
+        int id = getParaToInt(0);
+        boolean result = Test.dao.findById(id).set("score",0.5).update();
+        renderJson(new R(true,200,result,""));
+    }
+//    删除
+    public void deleteTest(){
+        int id = getParaToInt(0);
+        boolean result = Test.dao.deleteById(id);
+        renderJson(new R(true,200,result,""));
+    }
+//    关联查询
+    public void getContactList(){
+        List<Record> tests = new ArrayList<Record>();
+        tests = Db.find("select * from test");
+        renderJson(new R(true,200,tests,""));
     }
 }

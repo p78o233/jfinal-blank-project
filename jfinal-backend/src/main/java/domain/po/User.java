@@ -5,6 +5,8 @@ package domain.po;/*
 
 import com.jfinal.plugin.activerecord.Model;
 
-public class User extends Model<User> {
+import java.io.Serializable;
+
+public class User extends Model<User> implements Serializable {
     public static final User dao = new User().dao();
 }

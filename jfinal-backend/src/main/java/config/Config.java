@@ -10,6 +10,8 @@ import com.jfinal.template.Engine;
 import controller.BackController;
 import controller.FrontController;
 import controller.HelloController;
+import domain.po.Test;
+import domain.po.Testc;
 import domain.po.User;
 
 public class Config extends JFinalConfig {
@@ -37,7 +39,12 @@ public class Config extends JFinalConfig {
         plugins.add(dp);
         ActiveRecordPlugin arp = new ActiveRecordPlugin(dp);
         plugins.add(arp);
+//        添加对应的数据表
         arp.addMapping("user", User.class);
+        arp.addMapping("test", Test.class);
+        arp.addMapping("testc", Testc.class);
+//        显示执行的sql
+        arp.setShowSql(true);
         plugins.add(arp);
     }
 
