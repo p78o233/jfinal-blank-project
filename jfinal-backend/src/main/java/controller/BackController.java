@@ -14,8 +14,5 @@ public class BackController extends Controller {
         renderText("管理平台接口");
     }
 
-//    返回统一格式的json数据
-    public void sameJson(){
-        renderJson(new R(true,200,"",""));
-    }
+
 }
