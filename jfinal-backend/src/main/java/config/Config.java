@@ -13,6 +13,7 @@ import controller.HelloController;
 import domain.po.Test;
 import domain.po.Testc;
 import domain.po.User;
+import interceptor.HeaderInterceptor;
 
 public class Config extends JFinalConfig {
     @Override
@@ -24,8 +25,10 @@ public class Config extends JFinalConfig {
     public void configRoute(Routes routes) {
 //        添加controller
         routes.add("/blank/hello", HelloController.class);
-        routes.add("/blank/admin/test", BackController.class);
-        routes.add("/blank/api/test", FrontController.class);
+//        后台接口开头 /admin
+        routes.add("/admin/blank/test", BackController.class);
+//        前端接口开头 /api
+        routes.add("/api/blank/test", FrontController.class);
     }
 
     @Override
@@ -50,7 +53,8 @@ public class Config extends JFinalConfig {
 
     @Override
     public void configInterceptor(Interceptors interceptors) {
-
+//        拦截器
+        interceptors.add(new HeaderInterceptor());
     }
 
     @Override
