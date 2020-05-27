@@ -9,12 +9,15 @@ import com.jfinal.core.Controller;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.json.FastJson;
+import com.jfinal.plugin.activerecord.ActiveRecordException;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.upload.UploadFile;
 import domain.dto.TestDto;
 import domain.po.Test;
+import domain.po.Testc;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -125,8 +128,48 @@ public class HelloController extends Controller{
     }
 //    关联查询
     public void getContactList(){
+//        查询test表的list
         List<Record> tests = new ArrayList<Record>();
         tests = Db.find("select * from test");
+        for(int i=0;i<tests.size();i++) {
+            List<Testc> testcs = new ArrayList<Testc>();
+//            查询关联test 的 testc
+            testcs = new Test().getTestc(tests.get(i).getInt("id"));
+//            查询结果放到一个map<String,Object> 里面
+            Map testc = new HashMap();
+            testc.put("testcs",testcs);
+//            然后再set到test对应字段上面
+            tests.get(i).setColumns(testc);
+        }
         renderJson(new R(true,200,tests,""));
+    }
+
+//    事务管理
+    @Before(Tx.class)
+    public void tran(){
+//        MySql数据库表必须设置为InnoDB引擎时才支持事务，MyISAM并不支持事务。
+        try {
+            boolean resultTarn = Db.tx(() -> {
+                try {
+                    int id = getParaToInt(0);
+//                boolean result1 = Test.dao.findById(id).set("score", 0.5).update();
+//                    注意做更新是的时候不能用链式的更新方式只能用下面的这种
+                    int restlt1 = Db.update("update test set score = 0.5 where id = ?", id);
+                    int ids = getParaToInt(1);
+//                boolean result2 = Test.dao.findById(ids).set("score", 0.5).update();
+                    Db.update("update test set score = \"中文字符\" where id = ?", ids);
+                    return true;
+                } catch (Exception e) {
+//                throw e;
+                    return false;
+
+                }
+            });
+            renderJson(new R(true,200,resultTarn,""));
+        }catch (Exception e){
+            System.out.println(e);
+            renderJson(new R(false,500,e,""));
+        }
+
     }
 }

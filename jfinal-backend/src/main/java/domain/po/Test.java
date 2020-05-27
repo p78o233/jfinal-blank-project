@@ -12,8 +12,8 @@ import java.util.List;
 public class Test extends Model<Test> implements Serializable {
     public static final Test dao = new Test().dao();
 
-    public List<Testc> getTestc() {
-        return Testc.dao.find("select * from testc where testId = ?", get("id"));
+    public List<Testc> getTestc(int  testId) {
+        return Testc.dao.find("select * from testc where testId = ? ", testId);
     }
 
     private int id;
@@ -21,6 +21,8 @@ public class Test extends Model<Test> implements Serializable {
     private String name;
     private Date createTime;
     private float score;
+//    用于关联testc
+    private List<Testc> testcs;
 
     @Override
     public String toString() {
@@ -30,7 +32,11 @@ public class Test extends Model<Test> implements Serializable {
                 ", name='" + name + '\'' +
                 ", createTime=" + createTime +
                 ", score=" + score +
+                ", testcs=" + testcs +
                 '}';
+    }
+
+    public Test() {
     }
 
     public static Test getDao() {
@@ -77,14 +83,20 @@ public class Test extends Model<Test> implements Serializable {
         this.score = score;
     }
 
-    public Test() {
+    public List<Testc> getTestcs() {
+        return testcs;
     }
 
-    public Test(int id, int cdNum, String name, Date createTime, float score) {
+    public void setTestcs(List<Testc> testcs) {
+        this.testcs = testcs;
+    }
+
+    public Test(int id, int cdNum, String name, Date createTime, float score, List<Testc> testcs) {
         this.id = id;
         this.cdNum = cdNum;
         this.name = name;
         this.createTime = createTime;
         this.score = score;
+        this.testcs = testcs;
     }
 }
