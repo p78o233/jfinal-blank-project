@@ -38,9 +38,12 @@ public class Config extends JFinalConfig {
 
     @Override
     public void configPlugin(Plugins plugins) {
+//        数据库配置
         DruidPlugin dp = new DruidPlugin("jdbc:mysql://127.0.0.1:3306/oa?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC", "root", "root");
         plugins.add(dp);
         ActiveRecordPlugin arp = new ActiveRecordPlugin(dp);
+//        引入sql文件，用于动态sql语句
+        arp.addSqlTemplate("templets/hello.sql");
         plugins.add(arp);
 //        添加对应的数据表
         arp.addMapping("user", User.class);
