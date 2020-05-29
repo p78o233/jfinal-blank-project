@@ -27,6 +27,8 @@ import java.util.Map;
 
 public class HelloController extends Controller{
     public void index() {
+        try { Thread.sleep (5000) ;
+        } catch (InterruptedException ie){}
         renderText("你好");
     }
 
