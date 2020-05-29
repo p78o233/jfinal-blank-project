@@ -18,26 +18,28 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicInteger;
+
 //先限流，再校验
 //拦截器，做限流
 //拦截器，拦截所有的网络请求校验token是否有效
 public class HeaderInterceptor implements Interceptor {
 //    同一时间内能进来多少个请求
-    private volatile static int limit = 100;
-    private volatile static int nowRequest = 0;
+    private static int limit = 100;
+    private static int nowRequest = 0;
     @Override
     public void intercept(Invocation invocation) {
         Controller controller = invocation.getController();
 //        限流判断
         if(nowRequest<limit) {
-            nowRequest++;
+           this.safeAdd();
             HttpServletRequest request = controller.getRequest();
             String servletPath = request.getServletPath();
             String[] path = servletPath.split("/");
             System.out.println("访问路径" + servletPath);
 //        只拦截后台端口
             if (path[1].equals("admin")) {
-                nowRequest--;
+                this.safeSub();
                 //拦截检查
                 System.out.println("拦截检查");
                 PrintWriter writer = null;
@@ -60,7 +62,7 @@ public class HeaderInterceptor implements Interceptor {
             } else {
 //        继续余下的拦截器与目标方法
                invocation.invoke();
-               nowRequest--;
+                this.safeSub();
             }
         }else{
 //            队列已满不做后续处理
@@ -81,5 +83,14 @@ public class HeaderInterceptor implements Interceptor {
                     writer.close();
             }
         }
+    }
+
+    /* 使用 锁 来实现原子操作*/
+    public synchronized void safeAdd() {
+        nowRequest++;
+    }
+
+    public synchronized void safeSub(){
+        nowRequest--;
     }
 }
