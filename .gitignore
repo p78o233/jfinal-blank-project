@@ -1,2 +1,4 @@
 # Project exclude paths
 /jfinal-backend/target/
+.idea
+/jfinal-backend/jfinal-backend.iml

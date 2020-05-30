@@ -44,6 +44,7 @@ public class Config extends JFinalConfig {
         ActiveRecordPlugin arp = new ActiveRecordPlugin(dp);
 //        引入sql文件，用于动态sql语句
         arp.addSqlTemplate("templets/hello.sql");
+        arp.addSqlTemplate("templets/more.sql");
         plugins.add(arp);
 //        添加对应的数据表
         arp.addMapping("user", User.class);

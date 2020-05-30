@@ -175,7 +175,12 @@ public class HelloController extends Controller{
 
 //    sql文件指令
     public void sqlEnjoy(){
-        String sql = Db.getSql("findTest");
+        //查询只需要sql模板名字，和放在哪个文件无关
+//        String sql = Db.getSql("findTest");
+//        与上面的放在不同的文件夹里面，但是也是直接调用，所以最好加上namespace避免重名
+//        String sql = Db.getSql("findTestMore");
+//        使用namespace
+        String sql = Db.getSql("more.findTestNameSpace");
         List<Record> tests = new ArrayList<Record>();
         tests = Db.find(sql);
         renderJson(new R(true,200,tests,""));
