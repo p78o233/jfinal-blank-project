@@ -67,11 +67,12 @@ public class Config extends JFinalConfig {
 //        plugins.add(cp);
 
 //        用于缓存Hello测试模块的redis服务
-//        要自己添加maven依赖才能用
-        plugins.add(new EhCachePlugin());
+//        要自己添加maven依赖才能用，详细见jfinal-backend/pom.xml，redis数据库需要自己启动一个
+//        使用redis之前需要引入缓存插件
+//        plugins.add(new EhCachePlugin());
 //        第一个参数缓存对象名，第二个参数redis服务器ip，第三个参数redis密码
-        RedisPlugin redis = new RedisPlugin("hello", "127.0.0.1","123456");
-        plugins.add(redis);
+//        RedisPlugin redis = new RedisPlugin("hello", "127.0.0.1","123456");
+//        plugins.add(redis);
 
     }
 
