@@ -15,6 +15,8 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
+import com.jfinal.plugin.redis.Cache;
+import com.jfinal.plugin.redis.Redis;
 import com.jfinal.upload.UploadFile;
 import domain.dto.TestDto;
 import domain.po.Test;
@@ -241,5 +243,26 @@ public class HelloController extends Controller{
         List<Record> tests = new ArrayList<Record>();
         tests = Db.template("findTestNull", cond).find();;
         renderJson(new R(true,200,tests,""));
+    }
+
+//    redis设置值
+    public void setRedisParam(){
+//        获取在config配置的reids对象
+        Cache helloCache = Redis.use("hello");
+//        没有设置过期时间
+        helloCache.set("testHello","hello");
+//        有设置过期时间,单位秒
+        helloCache.setex("testHelloTime",10,"helloTime");
+        renderJson(new R(true,200,true,""));
+    }
+
+//    redis获取值
+    public void getRedisParam(){
+//        获取在config配置的reids对象
+        Cache helloCache = Redis.use("hello");
+        JSONObject obj = new JSONObject();
+        obj.put("testHello",helloCache.get("testHello"));
+        obj.put("testHelloTime",helloCache.get("testHelloTime"));
+        renderJson(new R(true,200,obj,""));
     }
 }

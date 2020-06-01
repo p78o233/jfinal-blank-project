@@ -7,6 +7,8 @@ import com.jfinal.config.*;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.cron4j.Cron4jPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
+import com.jfinal.plugin.ehcache.EhCachePlugin;
+import com.jfinal.plugin.redis.RedisPlugin;
 import com.jfinal.template.Engine;
 import controller.BackController;
 import controller.FrontController;
@@ -41,6 +43,7 @@ public class Config extends JFinalConfig {
     @Override
     public void configPlugin(Plugins plugins) {
 //        数据库配置
+//        要自己添加maven依赖才能用
         DruidPlugin dp = new DruidPlugin("jdbc:mysql://127.0.0.1:3306/oa?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC", "root", "root");
         plugins.add(dp);
         ActiveRecordPlugin arp = new ActiveRecordPlugin(dp);
@@ -58,10 +61,18 @@ public class Config extends JFinalConfig {
 
 //        定时任务配置
 //        他妈的要自己引入maven包，牛逼得不行这个框架，详细见jfinal-backend/pom.xml
-        Cron4jPlugin cp = new Cron4jPlugin();
 //        引入任务，这种表达式叫corn4j 表达式，只有5个参数，详细见http://www.jfinal.com/share/1414
-        cp.addTask("* * * * *", new MyTask());
-        plugins.add(cp);
+//        Cron4jPlugin cp = new Cron4jPlugin();
+//        cp.addTask("* * * * *", new MyTask());
+//        plugins.add(cp);
+
+//        用于缓存Hello测试模块的redis服务
+//        要自己添加maven依赖才能用
+        plugins.add(new EhCachePlugin());
+//        第一个参数缓存对象名，第二个参数redis服务器ip，第三个参数redis密码
+        RedisPlugin redis = new RedisPlugin("hello", "127.0.0.1","123456");
+        plugins.add(redis);
+
     }
 
     @Override
