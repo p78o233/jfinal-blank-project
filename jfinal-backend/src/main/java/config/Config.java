@@ -16,6 +16,7 @@ import controller.HelloController;
 import domain.po.Test;
 import domain.po.Testc;
 import domain.po.User;
+import handler.WebSocketHandler;
 import interceptor.HeaderInterceptor;
 import timer.MyTask;
 
@@ -84,6 +85,6 @@ public class Config extends JFinalConfig {
 
     @Override
     public void configHandler(Handlers handlers) {
-
+        handlers.add(new WebSocketHandler("/websocket"));
     }
 }

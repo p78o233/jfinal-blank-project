@@ -79,7 +79,7 @@
                     <version>2.2</version>
                     <configuration>
                         <!--配置端口号-->
-                        <port>80</port>
+                        <port>8202</port>
                         <!--配置访问路径，此处配置为根目录，即http://localhost/-->
                         <path>/</path>
                     </configuration>
