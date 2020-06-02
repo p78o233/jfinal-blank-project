@@ -116,6 +116,32 @@ public class HelloController extends Controller{
 //        System.out.println("主键"+dto.getInt("id"));
         renderJson(new R(true,200,result,""));
     }
+//    sql批量插入
+    public void sqlBacthInsertFun(){
+        List<Test> tests = new ArrayList<>();
+        Test r1 = new Test();
+        r1.set("name","p78o2");
+        r1.set("cdNum",123);
+        r1.set("createTime",new Date());
+        r1.set("score",0.5f);
+        tests.add(r1);
+        Test r2 = new Test();
+        r2.set("name","p78o3");
+        r2.set("cdNum",987);
+        r2.set("createTime",new Date());
+        r2.set("score",0.3f);
+        tests.add(r2);
+//        以下设置对象是不行的，插入的只会是null，一定要用上面的方法
+        Test t3 = new Test();
+        t3.setCdNum(654);
+        t3.setName("p78o4");
+        t3.setCreateTime(new Date());
+        t3.setScore(0.7f);
+        tests.add(t3);
+        String sql = "insert into test (name,cdNum,createTime,score) values (?,?,?,?)";
+        int[] result = Db.batch(sql,"name,cdNum,createTime,score",tests,500);
+        renderJson(new R(true,200,result,""));
+    }
 //    修改
     public void updateTest(){
         int id = getParaToInt(0);
@@ -208,33 +234,6 @@ public class HelloController extends Controller{
         List<Record> tests = new ArrayList<Record>();
         tests = Db.template("findByLike", cond).find();;
         renderJson(new R(true,200,tests,""));
-    }
-
-//    sql文件指令批量插入
-    public void sqlBacthInsertFun(){
-        List<Test> tests = new ArrayList<>();
-        Test r1 = new Test();
-        r1.set("name","p78o2");
-        r1.set("cdNum",123);
-        r1.set("createTime",new Date());
-        r1.set("score",0.5f);
-        tests.add(r1);
-        Test r2 = new Test();
-        r2.set("name","p78o3");
-        r2.set("cdNum",987);
-        r2.set("createTime",new Date());
-        r2.set("score",0.3f);
-        tests.add(r2);
-//        以下设置对象是不行的，插入的只会是null，一定要用上面的方法
-        Test t3 = new Test();
-        t3.setCdNum(654);
-        t3.setName("p78o4");
-        t3.setCreateTime(new Date());
-        t3.setScore(0.7f);
-        tests.add(t3);
-        String sql = "insert into test (name,cdNum,createTime,score) values (?,?,?,?)";
-        int[] result = Db.batch(sql,"name,cdNum,createTime,score",tests,500);
-        renderJson(new R(true,200,result,""));
     }
 
 //    sql文件指令动态sql
