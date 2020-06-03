@@ -85,6 +85,11 @@ public class Config extends JFinalConfig {
 
     @Override
     public void configHandler(Handlers handlers) {
+//        简单的服务器推送websockect例子
         handlers.add(new WebSocketHandler("/websocket"));
+//        单聊例子
+        handlers.add(new WebSocketHandler("/SingleTest"));
+//        群聊例子
+        handlers.add(new WebSocketHandler("/GroupTest"));
     }
 }

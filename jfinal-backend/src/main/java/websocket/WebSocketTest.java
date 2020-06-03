@@ -13,9 +13,9 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-
+//自己回复自己
 @ServerEndpoint("/websocket/{param}")
-public class WebSocketTest extends Controller {
+public class WebSocketTest {
     public WebSocketTest() {
         System.out.println(" WebSocket init~~~");
     }
