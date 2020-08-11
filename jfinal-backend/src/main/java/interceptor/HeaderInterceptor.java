@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -28,7 +29,7 @@ public class HeaderInterceptor implements Interceptor {
     private static int limit = 100;
     private static int nowRequest = 0;
     @Override
-    public void intercept(Invocation invocation) {
+    public void intercept(Invocation invocation)  {
         Controller controller = invocation.getController();
 //        限流判断
         if(nowRequest<limit) {

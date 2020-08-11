@@ -5,10 +5,7 @@ package config;/*
 
 import com.jfinal.config.*;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
-import com.jfinal.plugin.cron4j.Cron4jPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
-import com.jfinal.plugin.ehcache.EhCachePlugin;
-import com.jfinal.plugin.redis.RedisPlugin;
 import com.jfinal.template.Engine;
 import controller.BackController;
 import controller.FrontController;
@@ -18,7 +15,6 @@ import domain.po.Testc;
 import domain.po.User;
 import handler.WebSocketHandler;
 import interceptor.HeaderInterceptor;
-import timer.MyTask;
 
 public class Config extends JFinalConfig {
     @Override
