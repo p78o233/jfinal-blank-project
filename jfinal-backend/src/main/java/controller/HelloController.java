@@ -53,6 +53,13 @@ public class HelloController extends Controller {
         renderJson(new R(true, 200, title, ""));
     }
 
+//    获取form表单数据
+//    "Content-Type", "application/x-www-form-urlencoded"
+    public void getFormData(){
+        TestDto test = getBean(TestDto.class,"");
+        String name = getPara("name");
+        renderJson(new R(true,200,test,""));
+    }
 
     //    接收post application/json
     public void postJsonParamObject() {
@@ -238,7 +245,6 @@ public class HelloController extends Controller {
     public void sqlEnjoyPage() {
         Kv cond = Kv.by("score", 0.5);
         Page tests = Db.template("findByParamPage", cond).paginate(1, 10);
-        ;
         renderJson(new R(true, 200, tests, ""));
     }
 
