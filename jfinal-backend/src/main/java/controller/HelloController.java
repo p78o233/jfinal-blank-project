@@ -54,12 +54,32 @@ public class HelloController extends Controller {
     }
 
 //    获取form表单数据
-//    "Content-Type", "application/x-www-form-urlencoded"
+//    无文件上传方式，只有普通字段  "Content-Type", "application/x-www-form-urlencoded"
     public void getFormData(){
         TestDto test = getBean(TestDto.class,"");
         String name = getPara("name");
         renderJson(new R(true,200,test,""));
     }
+
+//    获取from表单，有字段参数，且有文件
+//    "content-type", "multipart/form-data;
+    public void getFileAndData(){
+        try {
+            UploadFile file = getFile();
+            String title = getPara("title");
+            System.out.println("--------file--------"+title);
+            File delfile = new File(file.getUploadPath() + "\\" + file.getFileName());
+            System.out.println("==========" + delfile.getPath());
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("filePath", delfile.getPath());
+            map.put("fileSize", delfile.length() / 1024 + "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        renderJson(new R(true, 200, "", ""));
+    }
+
 
     //    接收post application/json
     public void postJsonParamObject() {
