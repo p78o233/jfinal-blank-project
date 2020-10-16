@@ -96,8 +96,8 @@ public class HelloController extends Controller {
         renderJson(new R(true, 200, title, ""));
     }
 
-    //    文件上传
-    public void uploadFild() {
+    //    单个文件上传
+    public void uploadFile() {
 //        文件上传路径是 项目文件webapp/upload
         try {
             UploadFile file = getFile();
@@ -111,6 +111,19 @@ public class HelloController extends Controller {
             e.printStackTrace();
         }
 
+        renderJson(new R(true, 200, "", ""));
+    }
+//    多个文件上传
+    public void uploadFiles(){
+        List<UploadFile> files = getFiles();
+        try{
+            for(int i =0 ;i<files.size();i++){
+                File delfile = new File(files.get(i).getUploadPath() + "\\" + files.get(i).getFileName());
+                System.out.println("==========" + delfile.getPath());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         renderJson(new R(true, 200, "", ""));
     }
 
