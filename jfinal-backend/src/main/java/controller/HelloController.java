@@ -136,7 +136,9 @@ public class HelloController extends Controller {
     //    分页查询
     public void queryPage() {
 //        第一个参数当前页码 第二个参数分页大小
-        Page<Test> testPage = Test.dao.paginate(1, 1, "select * ", " from test");
+//        Page<Test> testPage = Test.dao.paginate(1, 1, "select * ", " from test");
+//        带参数，排序分页查询,查询条件用?做占位符
+        Page<Test> testPage = Test.dao.paginate(1, 10, "select * ", " from test where name = ? order by id desc","123");
         renderJson(new R(true, 200, testPage, ""));
     }
 
