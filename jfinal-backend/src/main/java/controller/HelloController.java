@@ -277,7 +277,6 @@ public class HelloController extends Controller {
         Kv cond = Kv.by("id", 13).set("cdNum", 1);
         List<Record> tests = new ArrayList<Record>();
         tests = Db.template("findByParamTest", cond).find();
-        ;
         renderJson(new R(true, 200, tests, ""));
     }
 
