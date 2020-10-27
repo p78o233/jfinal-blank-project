@@ -198,9 +198,18 @@ public class HelloController extends Controller {
     public void updateTest() {
         int id = getParaToInt(0);
 //        单条件更新
-//        boolean result = Test.dao.findById(id).set("score", 0.5).update();
+        long start = System.currentTimeMillis();
+//        多运行几次之后其实差别不大，还是按照jfinal的最简单写法编写，就是第一种
+//        161ms
+        boolean result = Test.dao.findById(id).set("score", 0.5).update();
+//        152ms
+//        int result = Db.update("update test set score = 0.5 where id = ? limit 1",id);
+//        85ms
+//        int result = Db.update("update test set score = 0.5 where id = ?",id);
 //        多条件更新
-        int result = Db.update("update test set score = ? where name = ? and score = ?",0.5f,"123","6");
+//        int result = Db.update("update test set score = ? where name = ? and score = ?",0.5f,"123","6");
+        long end = System.currentTimeMillis();
+        System.out.println(end-start);
         renderJson(new R(true, 200, result, ""));
     }
 
