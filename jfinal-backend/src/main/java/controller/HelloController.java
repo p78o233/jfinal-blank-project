@@ -22,6 +22,7 @@ import com.jfinal.upload.UploadFile;
 import domain.dto.TestDto;
 import domain.po.Test;
 import domain.po.Testc;
+import domain.po.Wl_Channel_Consumer;
 
 import java.io.File;
 import java.util.*;
@@ -53,22 +54,22 @@ public class HelloController extends Controller {
         renderJson(new R(true, 200, title, ""));
     }
 
-//    获取form表单数据
+    //    获取form表单数据
 //    无文件上传方式，只有普通字段  "Content-Type", "application/x-www-form-urlencoded"
-    public void getFormData(){
-        TestDto test = getBean(TestDto.class,"");
-        renderJson(new R(true,200,test,""));
+    public void getFormData() {
+        TestDto test = getBean(TestDto.class, "");
+        renderJson(new R(true, 200, test, ""));
     }
 
-//    获取from表单，有字段参数，且有文件
+    //    获取from表单，有字段参数，且有文件
 //    "content-type", "multipart/form-data;
-    public void getFileAndData(){
+    public void getFileAndData() {
         try {
             UploadFile file = getFile();
 //            使用from-data方式接收数据时要先使用getfile()方法
-            TestDto test = getBean(TestDto.class,"");
-            System.out.println("--------file--------"+test.toString());
-            if(file != null) {
+            TestDto test = getBean(TestDto.class, "");
+            System.out.println("--------file--------" + test.toString());
+            if (file != null) {
                 File delfile = new File(file.getUploadPath() + "\\" + file.getFileName());
                 System.out.println("==========" + delfile.getPath());
                 Map<String, String> map = new HashMap<String, String>();
@@ -113,15 +114,16 @@ public class HelloController extends Controller {
 
         renderJson(new R(true, 200, "", ""));
     }
-//    多个文件上传
-    public void uploadFiles(){
+
+    //    多个文件上传
+    public void uploadFiles() {
         List<UploadFile> files = getFiles();
-        try{
-            for(int i =0 ;i<files.size();i++){
+        try {
+            for (int i = 0; i < files.size(); i++) {
                 File delfile = new File(files.get(i).getUploadPath() + "\\" + files.get(i).getFileName());
                 System.out.println("==========" + delfile.getPath());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         renderJson(new R(true, 200, "", ""));
@@ -151,7 +153,7 @@ public class HelloController extends Controller {
 //        第一个参数当前页码 第二个参数分页大小
 //        Page<Test> testPage = Test.dao.paginate(1, 1, "select * ", " from test");
 //        带参数，排序分页查询,查询条件用?做占位符
-        Page<Test> testPage = Test.dao.paginate(1, 10, "select * ", " from test where name = ? order by id desc","123");
+        Page<Test> testPage = Test.dao.paginate(1, 10, "select * ", " from test where name = ? order by id desc", "123");
         renderJson(new R(true, 200, testPage, ""));
     }
 
@@ -209,7 +211,7 @@ public class HelloController extends Controller {
 //        多条件更新
 //        int result = Db.update("update test set score = ? where name = ? and score = ?",0.5f,"123","6");
         long end = System.currentTimeMillis();
-        System.out.println(end-start);
+        System.out.println(end - start);
         renderJson(new R(true, 200, result, ""));
     }
 
@@ -333,5 +335,50 @@ public class HelloController extends Controller {
         obj.put("testHello", helloCache.get("testHello"));
         obj.put("testHelloTime", helloCache.get("testHelloTime"));
         renderJson(new R(true, 200, obj, ""));
+    }
+
+    //    性能对比
+//    分页查询
+    public void pageWl() {
+//        使用lastId方式查询在200多万数据的情况下有几百毫秒的效率提升，但是主要性能消耗还是在count上面,数据库建议当数据量太大的时候最好添加一个缓存用来保存数据count
+        int page = getParaToInt(0);
+        int pageSize = getParaToInt(1);
+        int lastId = getParaToInt(2);
+//        带参数，排序分页查询,查询条件用?做占位符
+        long start = System.currentTimeMillis();
+//        使用原有方式查询
+        Page<Wl_Channel_Consumer> testPage = Wl_Channel_Consumer.dao.paginate(page, pageSize, "select * ", " from wl_channel_consumer order by id desc");
+        long end = System.currentTimeMillis();
+        System.out.println(end-start+"ms");
+//        使用lastid分页查询
+        long startLast = System.currentTimeMillis();
+        Kv cond = Kv.by("lastId", lastId).set("pageSize", pageSize);
+        int count = Db.queryInt("select count(*)  from wl_channel_consumer ");
+        List<Record> consumers = new ArrayList<Record>();
+        consumers = Db.template("selectPage", cond).find();
+        long endLast = System.currentTimeMillis();
+        System.out.println(endLast - startLast+"ms");
+        renderJson(new R(true, 200, consumers, ""));
+    }
+
+//    更新对比
+    public void updateWl(){
+//        基本上可以确定jfinal写法的效率最低，正常写法和优化写法差别不大，优化写法是有一点点提升，但是差别不大
+//        jfinal的方式
+        long startOrgin = System.currentTimeMillis();
+        boolean result = Wl_Channel_Consumer.dao.findById(3054).set("nickname", "p78o2").update();
+        long endOrgin = System.currentTimeMillis();
+//        正常写法
+        long start = System.currentTimeMillis();
+        int ordinResult = Db.update("update wl_channel_consumer set nickname = ? where id = ? ","p78o3",3054);
+        long end = System.currentTimeMillis();
+//        优化写法
+        long startBetter = System.currentTimeMillis();
+        int betterResult = Db.update("update wl_channel_consumer set nickname = ? where id = ? limit 1","p78o4",3054);
+        long endBetter = System.currentTimeMillis();
+        System.out.println("jfinal写法："+ String.valueOf(endOrgin - startOrgin) + "ms");
+        System.out.println("正常写法："+ String.valueOf(end - start) + "ms");
+        System.out.println("优化写法："+ String.valueOf(endBetter - startBetter) + "ms");
+        renderJson(new R(true, 200, "", ""));
     }
 }

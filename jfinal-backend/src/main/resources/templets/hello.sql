@@ -24,3 +24,12 @@
         and name like  concat('%',#para(name), '%')
     #end
 #end
+
+-- 使用lastid分页查询数据
+#sql("selectPage")
+    select * from wl_channel_consumer where 1 = 1
+    #if(lastId != 0)
+       and id < #para(lastId)
+    #end
+    order by id desc limit #para(pageSize)
+#end

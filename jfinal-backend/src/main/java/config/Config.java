@@ -13,6 +13,7 @@ import controller.HelloController;
 import domain.po.Test;
 import domain.po.Testc;
 import domain.po.User;
+import domain.po.Wl_Channel_Consumer;
 import handler.WebSocketHandler;
 import interceptor.HeaderInterceptor;
 
@@ -52,6 +53,7 @@ public class Config extends JFinalConfig {
         arp.addMapping("user", User.class);
         arp.addMapping("test", Test.class);
         arp.addMapping("testc", Testc.class);
+        arp.addMapping("wl_channel_consumer", Wl_Channel_Consumer.class);
 //        显示执行的sql
         arp.setShowSql(true);
         plugins.add(arp);
