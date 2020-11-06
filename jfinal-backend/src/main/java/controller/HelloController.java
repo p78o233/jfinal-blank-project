@@ -285,7 +285,13 @@ public class HelloController extends Controller {
         tests = Db.find(sql);
         renderJson(new R(true, 200, tests, ""));
     }
-
+//    验证一个namespace是否能多个指令
+    public void sqlEnjoyMutil(){
+        String sql = Db.getSql("more.findTestMore");
+        List<Record> tests = new ArrayList<Record>();
+        tests = Db.find(sql);
+        renderJson(new R(true, 200, tests, ""));
+    }
     //    sql文件指令参数
     public void sqlEnjoyParam() {
         // 构造参数

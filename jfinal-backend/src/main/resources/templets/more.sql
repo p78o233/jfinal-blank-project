@@ -6,4 +6,9 @@
   #sql("findTestNameSpace")
     select * from test
   #end
+
+  #sql("findTestMore")
+    select * from test where name = '123'
+  #end
+
 #end

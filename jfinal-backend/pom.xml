@@ -155,7 +155,7 @@
             <version>1.4.10</version>
         </dependency>
 
-<!--        更换启动方式-->
+<!--        更换启动方式 使用undertow-->
         <!-- https://mvnrepository.com/artifact/com.jfinal/jfinal-undertow -->
         <dependency>
             <groupId>com.jfinal</groupId>
@@ -168,7 +168,7 @@
             <artifactId>undertow-websockets-jsr</artifactId>
             <version>2.2.2.Final</version>
         </dependency>
-
+<!--        使用undertow结束-->
     </dependencies>
 
     <build>
