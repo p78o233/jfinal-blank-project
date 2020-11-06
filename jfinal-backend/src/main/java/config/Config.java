@@ -7,18 +7,12 @@ import com.jfinal.config.*;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.template.Engine;
-import controller.BackController;
-import controller.FrontController;
-import controller.HelloController;
 import domain.po.Test;
 import domain.po.Testc;
 import domain.po.User;
 import domain.po.Wl_Channel_Consumer;
 import handler.WebSocketHandler;
-import interceptor.ClassInterceptor;
 import interceptor.HeaderInterceptor;
-import interceptor.MethodInterceptor;
-import interceptor.MethodInterceptorSecond;
 
 public class Config extends JFinalConfig {
     @Override
