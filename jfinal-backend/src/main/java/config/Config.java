@@ -15,7 +15,10 @@ import domain.po.Testc;
 import domain.po.User;
 import domain.po.Wl_Channel_Consumer;
 import handler.WebSocketHandler;
+import interceptor.ClassInterceptor;
 import interceptor.HeaderInterceptor;
+import interceptor.MethodInterceptor;
+import interceptor.MethodInterceptorSecond;
 
 public class Config extends JFinalConfig {
     @Override
@@ -25,6 +28,7 @@ public class Config extends JFinalConfig {
 
     @Override
     public void configRoute(Routes routes) {
+//        路由配置
 //        添加controller
         routes.add("/blank/hello", HelloController.class);
 //        后台接口开头 /admin
@@ -77,7 +81,7 @@ public class Config extends JFinalConfig {
 
     @Override
     public void configInterceptor(Interceptors interceptors) {
-//        拦截器
+//        全局拦截器
         interceptors.add(new HeaderInterceptor());
     }
 

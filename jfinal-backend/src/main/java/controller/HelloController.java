@@ -23,10 +23,14 @@ import domain.dto.TestDto;
 import domain.po.Test;
 import domain.po.Testc;
 import domain.po.Wl_Channel_Consumer;
+import interceptor.ClassInterceptor;
+import interceptor.MethodInterceptor;
+import interceptor.MethodInterceptorSecond;
 
 import java.io.File;
 import java.util.*;
-
+//类级别拦截器
+//@Before(ClassInterceptor.class)
 public class HelloController extends Controller {
     public void index() {
         try {
@@ -380,5 +384,12 @@ public class HelloController extends Controller {
         System.out.println("正常写法："+ String.valueOf(end - start) + "ms");
         System.out.println("优化写法："+ String.valueOf(endBetter - startBetter) + "ms");
         renderJson(new R(true, 200, "", ""));
+    }
+
+//    方法拦截器
+//    先写的拦截器先执行
+    @Before({MethodInterceptor.class, MethodInterceptorSecond.class})
+    public void methodInterceptor(){
+        renderJson(new R(true, 200, "拦截器测试", ""));
     }
 }

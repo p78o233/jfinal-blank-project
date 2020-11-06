@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
-
+//全局拦截器
 //先限流，再校验
 //拦截器，做限流
 //拦截器，拦截所有的网络请求校验token是否有效
