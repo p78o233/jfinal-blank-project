@@ -30,7 +30,7 @@ import interceptor.MethodInterceptorSecond;
 import java.io.File;
 import java.util.*;
 //conbtroller类级别拦截器，类内每个方法都会被拦截
-@Before(ClassInterceptor.class)
+//@Before(ClassInterceptor.class)
 public class HelloController extends Controller {
     public void index() {
         try {

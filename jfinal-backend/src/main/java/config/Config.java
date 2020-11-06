@@ -28,13 +28,8 @@ public class Config extends JFinalConfig {
 
     @Override
     public void configRoute(Routes routes) {
-//        路由配置
-//        添加controller
-        routes.add("/blank/hello", HelloController.class);
-//        后台接口开头 /admin
-        routes.add("/admin/blank/test", BackController.class);
-//        前端接口开头 /api
-        routes.add("/api/blank/test", FrontController.class);
+//        路由配置使用路由拆分配置的方式
+        routes.add(new BlankRoutes());
     }
 
     @Override
