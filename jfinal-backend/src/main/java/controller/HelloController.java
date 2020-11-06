@@ -29,8 +29,8 @@ import interceptor.MethodInterceptorSecond;
 
 import java.io.File;
 import java.util.*;
-//类级别拦截器
-//@Before(ClassInterceptor.class)
+//conbtroller类级别拦截器，类内每个方法都会被拦截
+@Before(ClassInterceptor.class)
 public class HelloController extends Controller {
     public void index() {
         try {
@@ -386,7 +386,7 @@ public class HelloController extends Controller {
         renderJson(new R(true, 200, "", ""));
     }
 
-//    方法拦截器
+//    方法拦截器，只拦截本方法
 //    先写的拦截器先执行
     @Before({MethodInterceptor.class, MethodInterceptorSecond.class})
     public void methodInterceptor(){
