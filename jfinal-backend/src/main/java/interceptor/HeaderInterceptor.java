@@ -31,6 +31,12 @@ public class HeaderInterceptor implements Interceptor {
     @Override
     public void intercept(Invocation invocation)  {
         Controller controller = invocation.getController();
+        HttpServletResponse response = controller.getResponse();
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "*");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers",
+                "Origin, X-Requested-With, Content-Type, Accept,token");
 //        限流判断
         if(nowRequest<limit) {
            this.safeAdd();
@@ -44,7 +50,7 @@ public class HeaderInterceptor implements Interceptor {
                 //拦截检查
                 System.out.println("拦截检查");
                 PrintWriter writer = null;
-                HttpServletResponse response = invocation.getController().getResponse();
+                response = invocation.getController().getResponse();
 //            有中文的一定要设置返回的字符编码
                 response.setCharacterEncoding("UTF-8");
                 response.setContentType("application/json");
@@ -68,7 +74,7 @@ public class HeaderInterceptor implements Interceptor {
         }else{
 //            队列已满不做后续处理
             PrintWriter writer = null;
-            HttpServletResponse response = invocation.getController().getResponse();
+            response = invocation.getController().getResponse();
 //            有中文的一定要设置返回的字符编码
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
