@@ -9,21 +9,18 @@ import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
-import com.jfinal.json.FastJson;
 import com.jfinal.kit.Kv;
-import com.jfinal.plugin.activerecord.ActiveRecordException;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
+import com.jfinal.plugin.ehcache.CacheKit;
 import com.jfinal.plugin.redis.Cache;
 import com.jfinal.plugin.redis.Redis;
 import com.jfinal.upload.UploadFile;
 import domain.dto.TestDto;
 import domain.po.Test;
 import domain.po.Testc;
-import domain.po.Wl_Channel_Consumer;
-import interceptor.ClassInterceptor;
 import interceptor.MethodInterceptor;
 import interceptor.MethodInterceptorSecond;
 
@@ -347,50 +344,17 @@ public class HelloController extends Controller {
         renderJson(new R(true, 200, obj, ""));
     }
 
-    //    性能对比
-//    分页查询
-    public void pageWl() {
-//        使用lastId方式查询在200多万数据的情况下有几百毫秒的效率提升，但是主要性能消耗还是在count上面,数据库建议当数据量太大的时候最好添加一个缓存用来保存数据count
-        int page = getParaToInt(0);
-        int pageSize = getParaToInt(1);
-        int lastId = getParaToInt(2);
-//        带参数，排序分页查询,查询条件用?做占位符
-        long start = System.currentTimeMillis();
-//        使用原有方式查询
-        Page<Wl_Channel_Consumer> testPage = Wl_Channel_Consumer.dao.paginate(page, pageSize, "select * ", " from wl_channel_consumer order by id desc");
-        long end = System.currentTimeMillis();
-        System.out.println(end-start+"ms");
-//        使用lastid分页查询
-        long startLast = System.currentTimeMillis();
-        Kv cond = Kv.by("lastId", lastId).set("pageSize", pageSize);
-        int count = Db.queryInt("select count(*)  from wl_channel_consumer ");
-        List<Record> consumers = new ArrayList<Record>();
-        consumers = Db.template("selectPage", cond).find();
-        long endLast = System.currentTimeMillis();
-        System.out.println(endLast - startLast+"ms");
-        renderJson(new R(true, 200, consumers, ""));
+//    默认缓存
+    public void setCache(){
+        CacheKit.put("hello", "test", "缓存测试");
+        renderJson(new R(true, 200, null, "缓存保存成功"));
+    }
+    public void getCache(){
+        String value = CacheKit.get("hello", "test");
+        renderJson(new R(true, 200, value, "缓存取出成功"));
     }
 
-//    更新对比
-    public void updateWl(){
-//        基本上可以确定jfinal写法的效率最低，正常写法和优化写法差别不大，优化写法是有一点点提升，但是差别不大
-//        jfinal的方式
-        long startOrgin = System.currentTimeMillis();
-        boolean result = Wl_Channel_Consumer.dao.findById(3054).set("nickname", "p78o2").update();
-        long endOrgin = System.currentTimeMillis();
-//        正常写法
-        long start = System.currentTimeMillis();
-        int ordinResult = Db.update("update wl_channel_consumer set nickname = ? where id = ? ","p78o3",3054);
-        long end = System.currentTimeMillis();
-//        优化写法
-        long startBetter = System.currentTimeMillis();
-        int betterResult = Db.update("update wl_channel_consumer set nickname = ? where id = ? limit 1","p78o4",3054);
-        long endBetter = System.currentTimeMillis();
-        System.out.println("jfinal写法："+ String.valueOf(endOrgin - startOrgin) + "ms");
-        System.out.println("正常写法："+ String.valueOf(end - start) + "ms");
-        System.out.println("优化写法："+ String.valueOf(endBetter - startBetter) + "ms");
-        renderJson(new R(true, 200, "", ""));
-    }
+
 
 //    方法拦截器，只拦截本方法
 //    先写的拦截器先执行

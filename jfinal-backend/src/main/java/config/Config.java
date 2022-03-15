@@ -6,11 +6,11 @@ package config;/*
 import com.jfinal.config.*;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
+import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.template.Engine;
 import domain.po.Test;
 import domain.po.Testc;
 import domain.po.User;
-import domain.po.Wl_Channel_Consumer;
 import handler.WebSocketHandler;
 import interceptor.HeaderInterceptor;
 
@@ -46,7 +46,6 @@ public class Config extends JFinalConfig {
         arp.addMapping("user", User.class);
         arp.addMapping("test", Test.class);
         arp.addMapping("testc", Testc.class);
-        arp.addMapping("wl_channel_consumer", Wl_Channel_Consumer.class);
 //        显示执行的sql
         arp.setShowSql(true);
         plugins.add(arp);
@@ -57,6 +56,8 @@ public class Config extends JFinalConfig {
 //        Cron4jPlugin cp = new Cron4jPlugin();
 //        cp.addTask("* * * * *", new MyTask());
 //        plugins.add(cp);
+
+        plugins.add(new EhCachePlugin());
 
 //        用于缓存Hello测试模块的redis服务
 //        要自己添加maven依赖才能用，详细见jfinal-backend/pom.xml，redis数据库需要自己启动一个
