@@ -22,6 +22,7 @@
     <!--
         cache:为指定名称的对象进行缓存的特殊配置
         name:指定对象的完整名
+        不同模块创建不同的的，就不会使得缓存重名
      -->
     <cache name="hello" maxElementsInMemory="10000" eternal="false"
            timeToIdleSeconds="300" timeToLiveSeconds="600" overflowToDisk="true" />
